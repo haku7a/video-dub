@@ -1,5 +1,7 @@
 import logging
 
+from utils.media import fetch_videos
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -8,7 +10,7 @@ logging.basicConfig(
 
 
 def main():
-    print("Hello, World!")
+    video_paths = fetch_videos()
 
 
 if __name__ == "__main__":
