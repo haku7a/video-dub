@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 INPUT_DIR = Path("input")
 
 
-def fetch_videos():
+def fetch_videos() -> list[Path]:
     """Fetch all video files from the input directory."""
     video_extensions = {".mp4", ".avi", ".mkv", ".mov"}
 
