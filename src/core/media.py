@@ -7,7 +7,8 @@ import imageio_ffmpeg as ffmpeg
 logger = logging.getLogger(__name__)
 
 
-def extract_audio(video_paths: list[Path]) -> None:
+def extract_audio(video_paths: list[Path]) -> list[Path]:
+    audio_paths = []
     try:
         ffmpeg_exe = ffmpeg.get_ffmpeg_exe()
 
@@ -33,6 +34,10 @@ def extract_audio(video_paths: list[Path]) -> None:
                 capture_output=True,
             )
             logger.info(f"Extracted audio to '{audio_path.name}'")
+            audio_paths.append(audio_path)
+
+        return audio_paths
 
     except Exception as e:
         logger.warning(f"An error occurred during audio extraction: {e}")
+        return []
