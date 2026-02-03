@@ -5,7 +5,7 @@ from pathlib import Path
 from core.media import extract_audio
 from core.stt import transcribe_audio
 from utils.media import fetch_videos
-from utils.storage import save_transcriptions
+from utils.storage import load_transcriptions, save_transcriptions
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,6 +27,8 @@ def main():
     transcriptions = transcribe_audio(list_path_audio, model_size="large-v3")
     if transcriptions:
         save_transcriptions(transcriptions)
+
+    transcriptions = load_transcriptions()
 
 
 if __name__ == "__main__":
