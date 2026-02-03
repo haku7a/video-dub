@@ -6,6 +6,8 @@ import imageio_ffmpeg as ffmpeg
 
 logger = logging.getLogger(__name__)
 
+AUDIO_OUTPUT_DIR = Path("output")
+
 
 def extract_audio(video_paths: list[Path]) -> list[Path]:
     audio_paths = []
@@ -13,7 +15,7 @@ def extract_audio(video_paths: list[Path]) -> list[Path]:
         ffmpeg_exe = ffmpeg.get_ffmpeg_exe()
 
         for pth in video_paths:
-            audio_path = pth.with_suffix(".mp3")
+            audio_path = AUDIO_OUTPUT_DIR / pth.with_suffix(".mp3").name
 
             command = [
                 ffmpeg_exe,
