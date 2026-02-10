@@ -34,12 +34,10 @@ def main():
     video_paths = fetch_videos()
     list_path_audio = extract_audio(video_paths)
     for path_audio in list_path_audio:
-        transcriptions = transcribe_audio(path_audio, model_size="large-v3")
-        print(transcriptions)
-    # if transcriptions:
-    #     save_transcriptions(transcriptions)
-    #
-    #     translated_data = translate_transcriptions(transcription)
+        transcription = transcribe_audio(path_audio, model_size="large-v3")
+
+        translated = translate_transcriptions(transcription)
+        print(translated)
     #     output_path = "output/json/translated_transcriptions.json"
     #     save_transcriptions(translated_data, output_path)
     #
