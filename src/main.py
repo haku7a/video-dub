@@ -39,12 +39,12 @@ def main():
         translated = translate_transcriptions(transcription)
         save_transcriptions(translated, paths["json"])
 
-    #     asyncio.run(
-    #         create_audio_snippets(
-    #             Path("output/audio_segments"),
-    #             translated_data,
-    #         )
-    #     )
+        asyncio.run(
+            create_audio_snippets(
+                paths["final_results"],
+                translated,
+            )
+        )
     #
     #     glue_audio_fragments(
     #         Path("output/audio_segments"),
