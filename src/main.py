@@ -8,6 +8,7 @@ from core.stt import transcribe_audio
 from core.translate import translate_transcriptions
 from utils.media import fetch_videos
 from utils.storage import load_transcriptions, save_transcriptions
+from utils.folders import prepare_project_structure
 from core.tts import (
     create_audio_snippets,
     glue_audio_fragments,
@@ -29,6 +30,7 @@ if cublas_path.exists():
 
 
 def main():
+    prepare_project_structure()
     video_paths = fetch_videos()
     list_path_audio = extract_audio(video_paths)
     transcriptions = transcribe_audio(list_path_audio, model_size="large-v3")
