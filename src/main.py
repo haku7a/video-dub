@@ -33,31 +33,33 @@ def main():
     paths = prepare_project_structure()
     video_paths = fetch_videos()
     list_path_audio = extract_audio(video_paths)
-    transcriptions = transcribe_audio(list_path_audio, model_size="large-v3")
-    if transcriptions:
-        save_transcriptions(transcriptions)
-
-    translated_data = translate_transcriptions(transcriptions)
-    output_path = "output/json/translated_transcriptions.json"
-    save_transcriptions(translated_data, output_path)
-
-    asyncio.run(
-        create_audio_snippets(
-            Path("output/audio_segments"),
-            translated_data,
-        )
-    )
-
-    glue_audio_fragments(
-        Path("output/audio_segments"),
-        translated_data,
-    )
-
-    merge_video_with_dubbing(
-        Path("input/videoplayback (2).mp4"),
-        Path("output/audio_segments/videoplayback (2)_final_dub.mp3"),
-        Path("output/result.mp4"),
-    )
+    for path_audio in list_path_audio:
+        transcriptions = transcribe_audio(path_audio, model_size="large-v3")
+        print(transcriptions)
+    # if transcriptions:
+    #     save_transcriptions(transcriptions)
+    #
+    #     translated_data = translate_transcriptions(transcription)
+    #     output_path = "output/json/translated_transcriptions.json"
+    #     save_transcriptions(translated_data, output_path)
+    #
+    #     asyncio.run(
+    #         create_audio_snippets(
+    #             Path("output/audio_segments"),
+    #             translated_data,
+    #         )
+    #     )
+    #
+    #     glue_audio_fragments(
+    #         Path("output/audio_segments"),
+    #         translated_data,
+    #     )
+    #
+    #     merge_video_with_dubbing(
+    #         Path("input/videoplayback (2).mp4"),
+    #         Path("output/audio_segments/videoplayback (2)_final_dub.mp3"),
+    #         Path("output/result.mp4"),
+    #     )
 
 
 if __name__ == "__main__":
