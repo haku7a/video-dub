@@ -8,7 +8,7 @@ from core.stt import transcribe_audio
 from core.translate import translate_transcriptions
 from utils.media import fetch_videos
 from utils.storage import load_transcriptions, save_transcriptions
-from core.tts import create_audio_snippets
+from core.tts import create_audio_snippets, glue_audio_fragments
 
 logging.basicConfig(
     level=logging.INFO,
@@ -40,6 +40,11 @@ def main():
             Path("output/audio_segments"),
             translated_data,
         )
+    )
+
+    glue_audio_fragments(
+        Path("output/audio_segments"),
+        translated_data,
     )
 
 
