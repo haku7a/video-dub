@@ -24,8 +24,13 @@ def translate_transcriptions(data_list: List[Dict[str, Any]]) -> List[Dict[str, 
         file_name = video_data.get("audio_file", "N/A")
         logger.info(f"Start file translation {file_name}...")
 
+        history = []
         for i, segment in enumerate(video_data["segments"]):
             original_text = segment.get("text", "")
+
+            history.append(original_text)
+            if len(history) > 5:
+                history.pop(0)
 
             if not original_text:
                 continue
@@ -36,7 +41,7 @@ def translate_transcriptions(data_list: List[Dict[str, Any]]) -> List[Dict[str, 
                     messages=[
                         {
                             "role": "user",
-                            "content": f"Translate from {source_lang} to {target_lang} while preserving the original meaning and style.\
+                            "content": f"History: {history} Translate from {source_lang} to {target_lang} while preserving the original meaning and style.\
                                 Leave specialized terminology, industry jargon, and proper names in the original language.\
                                       Provide ONLY the translated text, no explanations or alternatives NO EXPLANATIONS. \
                                       Text to translate: {original_text}",
