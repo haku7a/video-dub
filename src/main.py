@@ -45,12 +45,12 @@ def main():
                 translated,
             )
         )
-    #
-    #     glue_audio_fragments(
-    #         Path("output/audio_segments"),
-    #         translated_data,
-    #     )
-    #
+
+        glue_audio_fragments(
+            paths["final_results"],
+            translated,
+        )
+
     #     merge_video_with_dubbing(
     #         Path("input/videoplayback (2).mp4"),
     #         Path("output/audio_segments/videoplayback (2)_final_dub.mp3"),
