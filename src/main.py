@@ -1,12 +1,14 @@
 import ctypes
 import logging
 from pathlib import Path
+import asyncio
 
 from core.media import extract_audio
 from core.stt import transcribe_audio
 from core.translate import translate_transcriptions
 from utils.media import fetch_videos
 from utils.storage import load_transcriptions, save_transcriptions
+from core.tts import create_audio_snippets
 
 logging.basicConfig(
     level=logging.INFO,
@@ -29,11 +31,16 @@ def main():
     if transcriptions:
         save_transcriptions(transcriptions)
 
-    transcriptions = load_transcriptions()
-
     translated_data = translate_transcriptions(transcriptions)
     output_path = "output/json/translated_transcriptions.json"
     save_transcriptions(translated_data, output_path)
+
+    asyncio.run(
+        create_audio_snippets(
+            Path("output/audio_segments"),
+            translated_data,
+        )
+    )
 
 
 if __name__ == "__main__":
