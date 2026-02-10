@@ -30,7 +30,7 @@ if cublas_path.exists():
 
 
 def main():
-    prepare_project_structure()
+    paths = prepare_project_structure()
     video_paths = fetch_videos()
     list_path_audio = extract_audio(video_paths)
     transcriptions = transcribe_audio(list_path_audio, model_size="large-v3")
