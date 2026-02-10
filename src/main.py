@@ -37,10 +37,8 @@ def main():
         transcription = transcribe_audio(path_audio, model_size="large-v3")
 
         translated = translate_transcriptions(transcription)
-        print(translated)
-    #     output_path = "output/json/translated_transcriptions.json"
-    #     save_transcriptions(translated_data, output_path)
-    #
+        save_transcriptions(translated, paths["json"])
+
     #     asyncio.run(
     #         create_audio_snippets(
     #             Path("output/audio_segments"),
