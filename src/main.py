@@ -8,7 +8,11 @@ from core.stt import transcribe_audio
 from core.translate import translate_transcriptions
 from utils.media import fetch_videos
 from utils.storage import load_transcriptions, save_transcriptions
-from core.tts import create_audio_snippets, glue_audio_fragments
+from core.tts import (
+    create_audio_snippets,
+    glue_audio_fragments,
+    merge_video_with_dubbing,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -45,6 +49,12 @@ def main():
     glue_audio_fragments(
         Path("output/audio_segments"),
         translated_data,
+    )
+
+    merge_video_with_dubbing(
+        Path("input/videoplayback (2).mp4"),
+        Path("output/audio_segments/videoplayback (2)_final_dub.mp3"),
+        Path("output/result.mp4"),
     )
 
 

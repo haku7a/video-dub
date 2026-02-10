@@ -71,3 +71,24 @@ def glue_audio_fragments(
         out = ffmpeg.output(final_audio, str(output_file))
         out.run(overwrite_output=True)
         print(f"Ready: {output_file}")
+
+
+def merge_video_with_dubbing(
+    video_input_path: Path,
+    audio_dubbed_path: Path,
+    final_output_path: Path,
+):
+    video_stream = ffmpeg.input(str(video_input_path)).video
+
+    audio_stream = ffmpeg.input(str(audio_dubbed_path)).audio
+
+    (
+        ffmpeg.output(
+            video_stream,
+            audio_stream,
+            str(final_output_path),
+            vcodec="copy",
+            acodec="aac",
+            shortest=None,
+        ).run(overwrite_output=True)
+    )
