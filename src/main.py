@@ -51,11 +51,10 @@ def main():
             translated,
         )
 
-    #     merge_video_with_dubbing(
-    #         Path("input/videoplayback (2).mp4"),
-    #         Path("output/audio_segments/videoplayback (2)_final_dub.mp3"),
-    #         Path("output/result.mp4"),
-    #     )
+        merge_video_with_dubbing(
+            translated.get("audio_file", ""),
+            paths["final_results"],
+        )
 
 
 if __name__ == "__main__":
