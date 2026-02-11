@@ -35,32 +35,32 @@ if cublas_path.exists():
 
 def main():
     paths = prepare_project_structure()
-    # video_paths = fetch_videos()
-    # list_path_audio = extract_audio(video_paths)
-    # for path_audio in list_path_audio:
-    #     transcription = transcribe_audio(path_audio, model_size="large-v3")
-    #
-    #     translated = translate_transcriptions(transcription)
-    #     save_transcriptions(translated, paths["json"])
-    #
-    #     asyncio.run(
-    #         create_audio_snippets(
-    #             paths["final_results"],
-    #             translated,
-    #         )
-    #     )
-    #
-    #     glue_audio_fragments(
-    #         paths["final_results"],
-    #         translated,
-    #     )
-    #
-    #     merge_video_with_dubbing(
-    #         translated.get("audio_file", ""),
-    #         paths["final_results"],
-    #     )
+    video_paths = fetch_videos()
+    list_path_audio = extract_audio(video_paths)
+    for path_audio in list_path_audio:
+        transcription = transcribe_audio(path_audio, model_size="large-v3")
 
-    delete_unnecessar_files(paths["final_results"])
+        translated = translate_transcriptions(transcription)
+        save_transcriptions(translated, paths["json"])
+
+        asyncio.run(
+            create_audio_snippets(
+                paths["final_results"],
+                translated,
+            )
+        )
+
+        glue_audio_fragments(
+            paths["final_results"],
+            translated,
+        )
+
+        merge_video_with_dubbing(
+            translated.get("audio_file", ""),
+            paths["final_results"],
+        )
+
+        delete_unnecessar_files(paths["final_results"])
 
 
 if __name__ == "__main__":

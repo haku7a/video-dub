@@ -4,7 +4,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 INPUT_DIR = Path("input")
-AUDIO_OUTPUT_DIR = Path("output")
+AUDIO_OUTPUT_DIR = Path("output/final_results")
 
 
 def fetch_videos() -> list[Path]:

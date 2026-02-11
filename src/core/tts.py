@@ -53,7 +53,7 @@ def glue_audio_fragments(
     )
 
     background = ffmpeg.input(
-        f"output/{audio_fragments.get('audio_file', '')}"
+        f"output/final_results/{audio_fragments.get('audio_file', '')}"
     ).audio.filter("volume", 0.3)
 
     final_audio = ffmpeg.filter(
