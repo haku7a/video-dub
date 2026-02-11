@@ -1,7 +1,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -27,13 +27,14 @@ def save_transcriptions(
 
 
 def load_transcriptions(
-    file_path: str = "output/json/transcriptions.json",
-) -> List[Dict[str, Any]]:
-    path = Path(file_path)
+    final_results: Path,
+    file_name: str,
+) -> dict[str, Any]:
+    path = Path(f"{final_results / file_name}")
 
     if not path.exists():
         logger.warning(f"Transcription file not found at path: {path}")
-        return []
+        return {}
     try:
         with path.open("r", encoding="utf-8") as f:
             data = json.load(f)
@@ -41,7 +42,7 @@ def load_transcriptions(
             return data
     except Exception as e:
         logger.warning(f"Error fetching or reading JSON: {e}")
-        return []
+        return {}
 
 
 def delete_unnecessar_files(final_results: Path):

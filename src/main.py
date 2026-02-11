@@ -43,20 +43,25 @@ def main():
         translated = translate_transcriptions(transcription)
         save_transcriptions(translated, paths["json"])
 
+        translated_fix = load_transcriptions(
+            paths["json"],
+            "Django Crash Course – Python Web Framework_transcribed.json",
+        )
+
         asyncio.run(
             create_audio_snippets(
                 paths["final_results"],
-                translated,
+                translated_fix,
             )
         )
 
         glue_audio_fragments(
             paths["final_results"],
-            translated,
+            translated_fix,
         )
 
         merge_video_with_dubbing(
-            translated.get("audio_file", ""),
+            translated_fix.get("audio_file", ""),
             paths["final_results"],
         )
 
