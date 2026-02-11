@@ -42,3 +42,9 @@ def load_transcriptions(
     except Exception as e:
         logger.warning(f"Error fetching or reading JSON: {e}")
         return []
+
+
+def delete_unnecessar_files(final_results: Path):
+    for file in final_results.iterdir():
+        if file.is_file() and file.suffix not in ".mp4":
+            file.unlink()
