@@ -25,13 +25,6 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
 )
 
-venv_lib_path = Path(".venv/lib/python3.12/site-packages/nvidia/cublas/lib")
-cublas_path = Path(
-    ".venv/lib/python3.12/site-packages/nvidia/cublas/lib/libcublas.so.12"
-)
-if cublas_path.exists():
-    ctypes.CDLL(str(cublas_path.absolute()))
-
 
 def main():
     paths = prepare_project_structure()
@@ -43,9 +36,11 @@ def main():
         translated = translate_transcriptions(transcription)
         save_transcriptions(translated, paths["json"])
 
+        input("!!!")
+
         translated_fix = load_transcriptions(
             paths["json"],
-            "Django Crash Course – Python Web Framework_transcribed.json",
+            Path(translated.get("audio_file", "")).stem + "_transcribed.json",
         )
 
         asyncio.run(
