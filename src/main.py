@@ -4,7 +4,6 @@ from pathlib import Path
 import asyncio
 
 from src.core.media import extract_audio
-from src.core.stt import transcribe_audio
 from src.core.translate import translate_transcriptions
 from src.utils.media import fetch_videos
 from src.utils.storage import (
@@ -12,6 +11,9 @@ from src.utils.storage import (
     save_transcriptions,
     delete_unnecessar_files,
 )
+from src.services.stt.faster_whisper_stt import FasterWhisperSTT
+from src.contracts import SpeechToText
+
 from src.utils.folders import prepare_project_structure
 from src.core.tts import (
     create_audio_snippets,
@@ -26,14 +28,23 @@ logging.basicConfig(
 )
 
 
-def main():
+def main(stt_service: SpeechToText):
     paths = prepare_project_structure()
     video_paths = fetch_videos()
     list_path_audio = extract_audio(video_paths)
     for path_audio in list_path_audio:
-        transcription = transcribe_audio(path_audio, model_size="large-v3")
+        transcription_obj = stt_service.transcribe(path_audio)
 
-        translated = translate_transcriptions(transcription)
+        transcription_dict = {
+            "audio_file": transcription_obj.audio_file,
+            "language": transcription_obj.language,
+            "segments": [
+                {"start": s.start, "end": s.end, "text": s.text}
+                for s in transcription_obj.segments
+            ],
+        }
+
+        translated = translate_transcriptions(transcription_dict)
         save_transcriptions(translated, paths["json"])
 
         input("!!!")
@@ -64,4 +75,11 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    stt = FasterWhisperSTT(
+        model_size="large-v3",
+        device="cuda",
+        compute_type="float16",
+    )
+    main(
+        stt_service=stt,
+    )
