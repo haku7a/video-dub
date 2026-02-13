@@ -1,10 +1,9 @@
 import logging
 from pathlib import Path
 
-logger = logging.getLogger(__name__)
+from src.config import INPUT_DIR, FINAL_RESULTS_DIR
 
-INPUT_DIR = Path("input")
-AUDIO_OUTPUT_DIR = Path("output/final_results")
+logger = logging.getLogger(__name__)
 
 
 def fetch_videos() -> list[Path]:
@@ -29,5 +28,5 @@ def fetch_videos() -> list[Path]:
 
 def get_audio_output_path(pth: Path) -> Path:
     """Generate the output audio file path based on the input video path."""
-    audio_path = AUDIO_OUTPUT_DIR / pth.with_suffix(".mp3").name
+    audio_path = FINAL_RESULTS_DIR / pth.with_suffix(".mp3").name
     return audio_path

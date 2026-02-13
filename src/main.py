@@ -3,17 +3,17 @@ import logging
 from pathlib import Path
 import asyncio
 
-from core.media import extract_audio
-from core.stt import transcribe_audio
-from core.translate import translate_transcriptions
-from utils.media import fetch_videos
-from utils.storage import (
+from src.core.media import extract_audio
+from src.core.stt import transcribe_audio
+from src.core.translate import translate_transcriptions
+from src.utils.media import fetch_videos
+from src.utils.storage import (
     load_transcriptions,
     save_transcriptions,
     delete_unnecessar_files,
 )
-from utils.folders import prepare_project_structure
-from core.tts import (
+from src.utils.folders import prepare_project_structure
+from src.core.tts import (
     create_audio_snippets,
     glue_audio_fragments,
     merge_video_with_dubbing,

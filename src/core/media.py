@@ -4,7 +4,7 @@ from pathlib import Path
 
 import imageio_ffmpeg as ffmpeg
 
-from utils.media import get_audio_output_path
+from src.utils.media import get_audio_output_path
 
 logger = logging.getLogger(__name__)
 
