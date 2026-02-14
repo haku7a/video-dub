@@ -1,10 +1,8 @@
-import ctypes
 import logging
 from pathlib import Path
 import asyncio
 
 from src.core.media import extract_audio
-from src.core.translate import translate_transcriptions
 from src.utils.media import fetch_videos
 from src.utils.storage import (
     load_transcriptions,
@@ -12,7 +10,8 @@ from src.utils.storage import (
     delete_unnecessar_files,
 )
 from src.services.stt.faster_whisper_stt import FasterWhisperSTT
-from src.contracts import SpeechToText
+from src.contracts import SpeechToText, Translator
+from src.services.translate.ollama_translator import OllamaTranslator
 
 from src.utils.folders import prepare_project_structure
 from src.core.tts import (
@@ -28,7 +27,7 @@ logging.basicConfig(
 )
 
 
-def main(stt_service: SpeechToText):
+def main(stt_service: SpeechToText, translator_service: Translator):
     paths = prepare_project_structure()
     video_paths = fetch_videos()
     list_path_audio = extract_audio(video_paths)
@@ -44,14 +43,30 @@ def main(stt_service: SpeechToText):
             ],
         }
 
-        translated = translate_transcriptions(transcription_dict)
-        save_transcriptions(translated, paths["json"])
+        translated_obj = translator_service.translate(
+            transcription_obj, target_lang="ru"
+        )
+
+        translated_dict = {
+            "audio_file": translated_obj.audio_file,
+            "language": translated_obj.language,
+            "segments": [
+                {
+                    "start": s.start,
+                    "end": s.end,
+                    "text": s.text,
+                    "translated_text": s.translated_text,
+                }
+                for s in translated_obj.segments
+            ],
+        }
+        save_transcriptions(translated_dict, paths["json"])
 
         input("!!!")
 
         translated_fix = load_transcriptions(
             paths["json"],
-            Path(translated.get("audio_file", "")).stem + "_transcribed.json",
+            Path(translated_dict["audio_file"]).stem + "_transcribed.json",
         )
 
         asyncio.run(
@@ -80,6 +95,8 @@ if __name__ == "__main__":
         device="cuda",
         compute_type="float16",
     )
-    main(
-        stt_service=stt,
+    translator = OllamaTranslator(
+        model="translategemma:4b",
+        temperature=0.0,
     )
+    main(stt_service=stt, translator_service=translator)

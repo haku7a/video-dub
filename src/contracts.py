@@ -21,3 +21,10 @@ class Transcription:
 class SpeechToText(ABC):
     @abstractmethod
     def transcribe(self, audio_path: Path) -> Transcription: ...
+
+
+class Translator(ABC):
+    @abstractmethod
+    def translate(
+        self, transcription: Transcription, target_lang: str = "ru"
+    ) -> Transcription: ...
