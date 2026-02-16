@@ -1,24 +1,6 @@
 from pathlib import Path
-import edge_tts
 from typing import Any
 import ffmpeg
-
-
-async def create_audio_snippets(
-    output_path: Path,
-    translated: dict[str, Any],
-    voice: str = "ru-RU-DmitryNeural",
-) -> None:
-    segments = translated.get("segments", [])
-    base_name = Path(translated.get("audio_file", "")).stem
-    for i, segment in enumerate(segments):
-        text = segment.get("translated_text", "")
-        if not text:
-            continue
-        file_name = f"{base_name} {i}.mp3"
-        target_file = output_path / file_name
-        communicate = edge_tts.Communicate(text, voice)
-        await communicate.save(str(target_file))
 
 
 def glue_audio_fragments(

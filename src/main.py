@@ -12,10 +12,10 @@ from src.utils.storage import (
 from src.services.stt.faster_whisper_stt import FasterWhisperSTT
 from src.contracts import SpeechToText, Translator
 from src.services.translate.ollama_translator import OllamaTranslator
+from src.services.tts.EdgeTTSegment import EdgeTTSSegmentGenerator
 
 from src.utils.folders import prepare_project_structure
 from src.core.tts import (
-    create_audio_snippets,
     glue_audio_fragments,
     merge_video_with_dubbing,
 )
@@ -27,21 +27,12 @@ logging.basicConfig(
 )
 
 
-def main(stt_service: SpeechToText, translator_service: Translator):
+def main(stt_service: SpeechToText, translator_service: Translator, tts_service):
     paths = prepare_project_structure()
     video_paths = fetch_videos()
     list_path_audio = extract_audio(video_paths)
     for path_audio in list_path_audio:
         transcription_obj = stt_service.transcribe(path_audio)
-
-        transcription_dict = {
-            "audio_file": transcription_obj.audio_file,
-            "language": transcription_obj.language,
-            "segments": [
-                {"start": s.start, "end": s.end, "text": s.text}
-                for s in transcription_obj.segments
-            ],
-        }
 
         translated_obj = translator_service.translate(
             transcription_obj, target_lang="ru"
@@ -70,9 +61,9 @@ def main(stt_service: SpeechToText, translator_service: Translator):
         )
 
         asyncio.run(
-            create_audio_snippets(
-                paths["final_results"],
-                translated_fix,
+            tts_service.generate_audio(
+                output_path=paths["final_results"],
+                translated=translated_fix,
             )
         )
 
@@ -95,8 +86,13 @@ if __name__ == "__main__":
         device="cuda",
         compute_type="float16",
     )
+
     translator = OllamaTranslator(
         model="translategemma:4b",
         temperature=0.0,
     )
-    main(stt_service=stt, translator_service=translator)
+
+    tts = EdgeTTSSegmentGenerator(
+        default_voice="ru-RU-DmitryNeural",
+    )
+    main(stt_service=stt, translator_service=translator, tts_service=tts)

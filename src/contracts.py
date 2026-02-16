@@ -28,3 +28,12 @@ class Translator(ABC):
     def translate(
         self, transcription: Transcription, target_lang: str = "ru"
     ) -> Transcription: ...
+
+
+class TextToSpeech(ABC):
+    @abstractmethod
+    async def generate_audio(
+        self,
+        text: str,
+        output_path: Path,
+    ) -> None: ...
