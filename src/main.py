@@ -38,26 +38,13 @@ def main(stt_service: SpeechToText, translator_service: Translator, tts_service)
             transcription_obj, target_lang="ru"
         )
 
-        translated_dict = {
-            "audio_file": translated_obj.audio_file,
-            "language": translated_obj.language,
-            "segments": [
-                {
-                    "start": s.start,
-                    "end": s.end,
-                    "text": s.text,
-                    "translated_text": s.translated_text,
-                }
-                for s in translated_obj.segments
-            ],
-        }
-        save_transcriptions(translated_dict, paths["json"])
+        save_transcriptions(translated_obj, paths["json"])
 
         input("!!!")
 
         translated_fix = load_transcriptions(
             paths["json"],
-            Path(translated_dict["audio_file"]).stem + "_transcribed.json",
+            Path(transcription_obj.audio_file).stem + "_transcribed.json",
         )
 
         asyncio.run(

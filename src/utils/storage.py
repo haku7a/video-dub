@@ -2,21 +2,24 @@ import json
 import logging
 from pathlib import Path
 from typing import Any
+from dataclasses import asdict
+
+from src.contracts import Transcription
 
 logger = logging.getLogger(__name__)
 
 
 def save_transcriptions(
-    data: dict[str, Any],
+    data: Transcription,
     output_path: Path,
 ) -> None:
     path = Path(output_path)
     try:
-        save_name = Path(data["audio_file"]).stem
+        save_name = Path(data.audio_file).stem
         final_path = output_path / f"{save_name}_transcribed.json"
         with final_path.open("w", encoding="utf-8") as f:
             json.dump(
-                data,
+                asdict(data),
                 f,
                 ensure_ascii=False,
                 indent=4,
