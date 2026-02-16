@@ -16,7 +16,6 @@ class FasterWhisperSTT(SpeechToText):
         device: str = "cuda",
         compute_type: str = "float16",
     ):
-        super().__init__()
         self.model_size = model_size
         self.device = device
         self.compute_type = compute_type
@@ -25,12 +24,20 @@ class FasterWhisperSTT(SpeechToText):
     @property
     def model(self):
         if self._model is None:
-            self._model = WhisperModel(
-                self.model_size,
-                device=self.device,
-                compute_type=self.compute_type,
+            logger.info(
+                f"Initializing model {self.model_size} on device {self.device}..."
             )
-        return self._model
+            try:
+                self._model = WhisperModel(
+                    self.model_size,
+                    device=self.device,
+                    compute_type=self.compute_type,
+                )
+                logger.info("Model successfully loaded")
+            except Exception as e:
+                logger.error(f"Error loading model: {e}", exc_info=True)
+                raise
+            return self._model
 
     def transcribe(self, audio_path: Path) -> Transcription:
 
